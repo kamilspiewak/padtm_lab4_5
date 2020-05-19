@@ -15,7 +15,7 @@ import java.util.Arrays;
 import java.util.List;
 
 public class MainActivity extends AppCompatActivity {
-    private ArrayList<List<String>> target;
+    private ArrayList<String> target;
     private ArrayAdapter adapter;
 
     @Override
@@ -23,8 +23,8 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
         String[] values = new String[] {"Pies", "Kot","Dzik","Lis","Mysz","Wilk"};
-        this.target = new ArrayList<java.util.List<String>>();
-        this.target.add(Arrays.asList(values));
+        this.target = new ArrayList<String>();
+        this.target.addAll(Arrays.asList(values));
         this.adapter = new ArrayAdapter(this,android.R.layout.simple_list_item_1,this.target);
         ListView listview = (ListView) findViewById(R.id.ListView);
         listview.setAdapter(this.adapter);
@@ -40,5 +40,17 @@ public class MainActivity extends AppCompatActivity {
     public void nowyWpis(MenuItem menuItem){
         Intent intencja = new Intent(this,DodajWpis.class);
         startActivityForResult(intencja,1);
+    }
+
+
+    @Override
+    protected void onActivityResult(
+        int requestCode, int resultCode,Intent data){
+        if(requestCode==1 && resultCode==RESULT_OK){
+            Bundle extras = data.getExtras();
+            String nowy = (String)extras.get("wpis");
+            target.add(nowy);
+            adapter.notifyDataSetChanged();
+        }
     }
 }
